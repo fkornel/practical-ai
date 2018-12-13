@@ -11,18 +11,19 @@ namespace Practical.AI.PropositionalLogic
         public abstract bool Evaluate();
         public abstract IEnumerable<Variable> Variables();
         public abstract Formula ToNnf();
-        /*
-         * public abstract Formula ToCnf();
+        public abstract Formula ToCnf();
 
-         in progress
+        
         public Formula DistributeCnf(Formula p, Formula q)
         {
             if (p is And)
                 return new And(DistributeCnf((p as And).P, q), DistributeCnf((p as And).Q, q));
 
             if (q is And)
-                return new And(DistributeCnf)
-        }*/
+                return new And(DistributeCnf(p, (q as And).P), DistributeCnf(p, (q as And).Q));
+
+            return new Or(p, q);
+        }
     }
 
     public abstract class BinaryGate : Formula
@@ -56,6 +57,11 @@ namespace Practical.AI.PropositionalLogic
         {
             return new And(P.ToNnf(), Q.ToNnf());
         }
+
+        public override Formula ToCnf()
+        {
+            return new And(P.ToCnf(), Q.ToCnf());
+        }
     }
 
     public class Or : BinaryGate
@@ -71,6 +77,11 @@ namespace Practical.AI.PropositionalLogic
         public override Formula ToNnf()
         {
             return new Or(P.ToNnf(), Q.ToNnf());
+        }
+
+        public override Formula ToCnf()
+        {
+            return DistributeCnf(P.ToCnf(), Q.ToCnf());
         }
     }
 
@@ -101,6 +112,11 @@ namespace Practical.AI.PropositionalLogic
             if (P is Not)
                 return new Not((P as Not).P);
 
+            return this;
+        }
+
+        public override Formula ToCnf()
+        {
             return this;
         }
     }
