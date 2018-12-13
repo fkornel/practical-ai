@@ -141,7 +141,12 @@ namespace Practical.AI.PropositionalLogic
 
         public override Formula ToNnf()
         {
-            return this;
+            throw new NotImplementedException();
+        }
+
+        public override Formula ToCnf()
+        {
+            throw new NotImplementedException();
         }
     }
 }
